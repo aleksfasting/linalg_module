@@ -48,6 +48,11 @@ class Matrix:
                     res.array[i][j] += self.array[i][k] * other.array[k][j]
         return res
 
+    def rref(self: 'Matrix') -> 'Matrix':
+        res = Matrix(self.dim)
+        
+        return res
+
 def main() -> None:
     m = Matrix((3,3), [[1,2,3],[4,5,6],[7,8,9]])
     n = Matrix((3,2), [[9,7],[6,4],[3,1]])
