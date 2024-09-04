@@ -16,16 +16,22 @@ class Matrix:
                 raise Exception("Dimension not fitting to vals")
             self.array = vals
 
-    def __getitem__(self, coord: tuple[int]) -> float:
+    def __getitem__(self, coord: tuple['int']) -> 'float':
         if (len(coord) != 2):
             raise Exception("Invalid tuple")
         i = coord[0]
         j = coord[1]
+        if (type(i) == str):
+            if (type(j) == str):
+                return Matrix(self.dim, self.array)
+            return Matrix((self.dim[0],1), self.array[j::self.dim[1]])
+        if (type(j) == str):
+            return Matrix((1, self.dim[1]), self.array[self.dim[0]*i:self.dim[0]*(i+1)])
         if (i >= self.dim[0]):
             raise Exception("Index i larger than dimension")
         if (j >= self.dim[1]):
             raise Exception("Index j larger than dimension")
-        return self.array[i*self.dim[0] + j]
+        return self.array[i*self.dim[1] + j]
     
     def __setitem__(self, coord: tuple[int], a: int) -> None:
         if (len(coord) != 2):
@@ -106,7 +112,7 @@ class Matrix:
 
 def main() -> None:
     m = Matrix((3,3), [[1,2,3],[4,5,6],[7,8,9]])
-    print(m.rref())
+    print(m['i',0])
 
 if __name__ == "__main__":
     main()
