@@ -33,11 +33,35 @@ class Matrix:
             raise Exception("Index j larger than dimension")
         return self.array[i*self.dim[1] + j]
     
-    def __setitem__(self, coord: tuple[int], a: int) -> None:
+    def __setitem__(self, coord: tuple[int], a: 'Matrix') -> None:
         if (len(coord) != 2):
             raise Exception("Invalid tuple")
         i = coord[0]
         j = coord[1]
+
+        if (type(i) == str):
+            if (type(a) != Matrix):
+                raise Exception("needs matrix input")
+            if (a.dim == self.dim and type(j) == str):
+                self.array = a.array
+            if (type(j) == str):
+                raise Exception("Dimension of matrix is wrong")
+            if (a.dim != (self.dim[0], 1)):
+                raise Exception("Dimension of matrix is wrong")
+            for k in range(self.dim[0]):
+                self.array[j + self.dim[1] * k] = a[k,0]
+            return
+        
+        if (type(j) == str):
+            if (type(a) != Matrix):
+                raise Exception("Needs matrix input")
+            if (a.dim != (1, self.dim[1])):
+                raise Exception("Dimension of mtrix is wrong")
+            for k in range(self.dim[0]):
+                self.array[i * self.dim[0] + k] = a[0,k]
+            return
+
+
         if (i >= self.dim[0]):
             raise Exception("Index i larger than dimension")
         if (j >= self.dim[1]):
@@ -71,22 +95,21 @@ class Matrix:
         return res
     
     def __mul__(self: 'Matrix', other: 'Matrix') -> 'Matrix':
+        if (type(other) != Matrix):
+            res = Matrix(self.dim, self.array)
+            for i in range(self.dim[0]):
+                for j in range(self.dim[1]):
+                    res[i,j] *= other
+            return res
+
         if (self.dim[1] != other.dim[0]):
             raise Exception("Invalid matrix dimensions")
         res = Matrix((self.dim[0], other.dim[1]))
+
         for i in range(self.dim[0]):
             for j in range(other.dim[1]):
                 for k in range(self.dim[1]):
                     res[i,j] += self[i,k] * other[k,j]
-        return res
-    
-    def __mul__(self: 'Matrix', a: 'int') -> 'Matrix':
-        res = Matrix(self.dim, self.array)
-
-        for i in range(self.dim[0]):
-            for j in range(self.dim[1]):
-                res[i,j] *= a
-
         return res
 
     def rref(self: 'Matrix') -> 'Matrix':
@@ -113,6 +136,10 @@ class Matrix:
 def main() -> None:
     m = Matrix((3,3), [[1,2,3],[4,5,6],[7,8,9]])
     print(m['i',0])
+
+    m['i', 1] = m['i', 0]
+    m[1, 'j'] = m[0, 'j']
+    print(m)
 
 if __name__ == "__main__":
     main()
