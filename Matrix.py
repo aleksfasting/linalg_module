@@ -47,17 +47,40 @@ class Matrix:
                 for k in range(self.dim[1]):
                     res.array[i][j] += self.array[i][k] * other.array[k][j]
         return res
+    
+    def __mul__(self: 'Matrix', a: 'int') -> 'Matrix':
+        res = Matrix(self.dim, self.array)
+
+        for i in range(self.dim[0]):
+            for j in range(self.dim[1]):
+                res.array[i][j] *= a
+
+        return res
 
     def rref(self: 'Matrix') -> 'Matrix':
-        res = Matrix(self.dim)
+        res = Matrix(self.dim, self.array)
+
+        const = res.array[0][0]
+        for j in range(self.dim[1]):
+            if const == 0: break
+            res.array[0][j] = res.array[0][j] / const
+
+        for i in range(1,self.dim[0]):
+            for j in range(i):
+                const = res.array[i][j]
+                for k in range(self.dim[1]):
+                    res.array[i][k] = res.array[i][k] - res.array[j][k] * const
+            
+            const = res.array[i][i]
+            if const == 0: continue
+            for j in range(i, self.dim[0]):
+                res.array[i][j] = res.array[i][j] / const
         
         return res
 
 def main() -> None:
     m = Matrix((3,3), [[1,2,3],[4,5,6],[7,8,9]])
-    n = Matrix((3,2), [[9,7],[6,4],[3,1]])
-    o = m*n
-    print(o)
+    print(m.rref())
 
 if __name__ == "__main__":
     main()
