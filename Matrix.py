@@ -132,14 +132,19 @@ class Matrix:
                 res[i,j] = res[i,j] / const
         
         return res
+    
+    def invert(self) -> 'Matrix':
+        res = Matrix((self.dim[1], self.dim[1]))
+
+        for i in range(self.dim[0]):
+            for j in range(self.dim[1]):
+                res[j,i] = self[i,j]
+
+        return res
 
 def main() -> None:
     m = Matrix((3,3), [[1,2,3],[4,5,6],[7,8,9]])
-    print(m['i',0])
-
-    m['i', 1] = m['i', 0]
-    m[1, 'j'] = m[0, 'j']
-    print(m)
+    print(m.invert())
 
 if __name__ == "__main__":
     main()
