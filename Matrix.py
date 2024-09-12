@@ -154,9 +154,23 @@ class Matrix:
             raise Exception("vector and matrix not in same vector space")
         res = Matrix((self.dim[0], self.dim[1] + 1))
 
-        res_array = self.array
+        res_array = self.array.copy()
         for i in range(self.dim[0]):
             res_array.insert((i+1)*self.dim[1]+i, vec[i])
+        
+        res.array = res_array
+        return res
+    
+    def extendMatrixByRowVector(self: 'Matrix', vec: 'Matrix') -> 'Matrix':
+        if (vec.dim[0] != 1):
+            raise Exception("Not a column vector")
+        if (vec.dim[1] != self.dim[1]):
+            raise Exception("vector and matrix not in same vector space")
+        res = Matrix((self.dim[0] + 1, self.dim[1]))
+
+        res_array = self.array.copy()
+        for i in range(self.dim[1]):
+            res_array.append(vec[i])
         
         res.array = res_array
         return res
@@ -165,7 +179,9 @@ class Matrix:
 def main() -> None:
     m = Matrix((3,3), [[1,2,3],[4,5,6],[7,8,9]])
     print(m)
-    print(m.extendMatrixByColumnVector(Matrix((3,1), [111,0,0])))
+    print(m.extendMatrixByColumnVector(Matrix((3,1), [0,0,0])))
+    print(m)
+    print(m.extendMatrixByRowVector(Matrix((1,3), [0,0,0])))
 
 if __name__ == "__main__":
     main()
