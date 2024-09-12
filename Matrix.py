@@ -17,7 +17,12 @@ class Matrix:
             self.array = vals
 
     def __getitem__(self, coord: tuple['int']) -> 'float':
-        if (len(coord) != 2):
+        if (type(coord) == int):
+            if (self.dim[0] == 1):
+                coord = (0, coord)
+            elif (self.dim[1] == 1):
+                coord = (coord, 0)
+        elif (len(coord) != 2):
             raise Exception("Invalid tuple")
         i = coord[0]
         j = coord[1]
@@ -141,10 +146,26 @@ class Matrix:
                 res[j,i] = self[i,j]
 
         return res
+    
+    def extendMatrixByColumnVector(self: 'Matrix', vec: 'Matrix') -> 'Matrix':
+        if (vec.dim[1] != 1):
+            raise Exception("Not a column vector")
+        if (vec.dim[0] != self.dim[0]):
+            raise Exception("vector and matrix not in same vector space")
+        res = Matrix((self.dim[0], self.dim[1] + 1))
+
+        res_array = self.array
+        for i in range(self.dim[0]):
+            res_array.insert((i+1)*self.dim[1]+i, vec[i])
+        
+        res.array = res_array
+        return res
+
 
 def main() -> None:
     m = Matrix((3,3), [[1,2,3],[4,5,6],[7,8,9]])
-    print(m.invert())
+    print(m)
+    print(m.extendMatrixByColumnVector(Matrix((3,1), [111,0,0])))
 
 if __name__ == "__main__":
     main()
