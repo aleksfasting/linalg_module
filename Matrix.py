@@ -185,6 +185,16 @@ class Matrix:
 
         return res
 
+    def extendMatrixCols(self: 'Matrix', extendBy: 'Matrix') -> 'Matrix':
+        if (extendBy.dim[1] != self.dim[1]):
+            raise Exception("matrices not in same vector space")
+        
+        res = Matrix(self.dim, self.array.copy())
+        for i in range(extendBy.dim[0]):
+            res = res.extendMatrixByRowVector(extendBy[i, 'j'])
+
+        return res
+
 
 def main() -> None:
     m = Matrix((3,3), [[1,2,3],[4,5,6],[7,8,9]])
