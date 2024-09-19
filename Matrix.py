@@ -1,19 +1,16 @@
+from MatrixValidator import MatrixValidator
+
 class Matrix:
     def __init__(self: 'Matrix', dim: tuple[int], vals: list[list[int]] = None) -> 'Matrix':
         self.dim = dim
+        MatrixValidator.validateConstructor(dim, vals)
         if (vals == None):
             self.array = [0 for i in range(dim[0] * dim[1])]
         elif (type(vals[0]) != int and type(vals[0]) != float):
-            if (len(vals) != dim[0]):
-                raise Exception("Invalid number of rows")
-            if (len(vals[0]) != dim[1]):
-                raise Exception("Invalid number of columns")
             self.array = []
             for i in range(dim[0]):
                 self.array += [vals[i][j] for j in range(dim[1])]
         else:
-            if (len(vals) != dim[0] * dim[1]):
-                raise Exception("Dimension not fitting to vals")
             self.array = vals
 
     def __getitem__(self, coord: tuple['int']) -> 'float':
