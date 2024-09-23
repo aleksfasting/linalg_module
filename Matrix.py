@@ -19,8 +19,6 @@ class Matrix:
                 coord = (0, coord)
             elif (self.dim[1] == 1):
                 coord = (coord, 0)
-        elif (len(coord) != 2):
-            raise Exception("Invalid tuple")
         i = coord[0]
         j = coord[1]
         if (type(i) == str):
@@ -29,10 +27,6 @@ class Matrix:
             return Matrix((self.dim[0],1), self.array[j::self.dim[1]])
         if (type(j) == str):
             return Matrix((1, self.dim[1]), self.array[self.dim[0]*i:self.dim[0]*(i+1)])
-        if (i >= self.dim[0]):
-            raise Exception("Index i larger than dimension")
-        if (j >= self.dim[1]):
-            raise Exception("Index j larger than dimension")
         return self.array[i*self.dim[1] + j]
     
     def __setitem__(self, coord: tuple[int], a: 'Matrix') -> None:
