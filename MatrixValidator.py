@@ -27,3 +27,26 @@ class MatrixValidator:
             raise Exception("Index i larger than dimension")
         if (type(j) != str and (j >= self.dim[1] or j < 0)):
             raise Exception("Index j larger than dimension")
+        
+    def validateSetItem(dim: tuple[int], coord: tuple[int], a):
+        if (len(coord) != 2):
+            raise Exception("Invalid tuple")
+        
+        i = coord[0]
+        j = coord[1]
+
+        if (type(i) == str):
+            if (type(j) == str):
+                raise Exception("Dimension of matrix is wrong")
+            if (a.dim != (dim[0], 1)):
+                raise Exception("Dimension of matrix is wrong")
+            
+        if (type(j) == str):
+            if (a.dim != (1, self.dim[1])):
+                raise Exception("Dimension of mtrix is wrong")
+            return
+        
+        if (i >= self.dim[0]):
+            raise Exception("Index i larger than dimension")
+        if (j >= self.dim[1]):
+            raise Exception("Index j larger than dimension")
