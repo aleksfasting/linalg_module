@@ -30,38 +30,24 @@ class Matrix:
         return self.array[i*self.dim[1] + j]
     
     def __setitem__(self, coord: tuple[int], a: 'Matrix') -> None:
-        if (len(coord) != 2):
-            raise Exception("Invalid tuple")
+        if (type(a) != Matrix):
+            raise Exception("Needs matrix input")
+        MatrixValidator.validateSetItem(self.dim, coord, a)
         i = coord[0]
         j = coord[1]
 
         if (type(i) == str):
-            if (type(a) != Matrix):
-                raise Exception("needs matrix input")
             if (a.dim == self.dim and type(j) == str):
                 self.array = a.array
-            if (type(j) == str):
-                raise Exception("Dimension of matrix is wrong")
-            if (a.dim != (self.dim[0], 1)):
-                raise Exception("Dimension of matrix is wrong")
             for k in range(self.dim[0]):
                 self.array[j + self.dim[1] * k] = a[k,0]
             return
         
         if (type(j) == str):
-            if (type(a) != Matrix):
-                raise Exception("Needs matrix input")
-            if (a.dim != (1, self.dim[1])):
-                raise Exception("Dimension of mtrix is wrong")
             for k in range(self.dim[0]):
                 self.array[i * self.dim[0] + k] = a[0,k]
             return
 
-
-        if (i >= self.dim[0]):
-            raise Exception("Index i larger than dimension")
-        if (j >= self.dim[1]):
-            raise Exception("Index j larger than dimension")
         self.array[i*self.dim[0] + j] = a
 
     def __str__(self: 'Matrix') -> str:
