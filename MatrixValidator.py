@@ -50,3 +50,7 @@ class MatrixValidator:
             raise Exception("Index i larger than dimension")
         if (j >= self.dim[1]):
             raise Exception("Index j larger than dimension")
+        
+    def validateAdd(dim0, dim1):
+        if (dim0 != dim1):
+            raise Exception("Matrices must have the same dimensions")

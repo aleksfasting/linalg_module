@@ -59,8 +59,7 @@ class Matrix:
         return s
     
     def __add__(self: 'Matrix', other: 'Matrix') -> 'Matrix':
-        if (self.dim != other.dim):
-            raise Exception("Matrices must have the same dimensions")
+        MatrixValidator.validateAdd(self.dim, other.dim)
         res = Matrix(self.dim)
         for i in range(self.dim[0]):
             for j in range(self.dim[1]):
