@@ -54,3 +54,7 @@ class MatrixValidator:
     def validateAdd(dim0, dim1):
         if (dim0 != dim1):
             raise Exception("Matrices must have the same dimensions")
+        
+    def validateMul(dim0, dim1):
+        if (dim0[1] != dim1[0]):
+            raise Exception("Invalid matrix dimensions")

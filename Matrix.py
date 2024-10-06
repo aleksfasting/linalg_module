@@ -82,8 +82,7 @@ class Matrix:
                     res[i,j] *= other
             return res
 
-        if (self.dim[1] != other.dim[0]):
-            raise Exception("Invalid matrix dimensions")
+        MatrixValidator.validateMul(self.dim, other.dim)
         res = Matrix((self.dim[0], other.dim[1]))
 
         for i in range(self.dim[0]):
