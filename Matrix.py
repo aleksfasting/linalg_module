@@ -122,10 +122,7 @@ class Matrix:
         return res
     
     def extendMatrixByColumnVector(self: 'Matrix', vec: 'Matrix') -> 'Matrix':
-        if (vec.dim[1] != 1):
-            raise Exception("Not a column vector")
-        if (vec.dim[0] != self.dim[0]):
-            raise Exception("vector and matrix not in same vector space")
+        MatrixValidator.validateExtendByColumnVector(self.dim, vec.dim)
         res = Matrix((self.dim[0], self.dim[1] + 1))
 
         res_array = self.array.copy()

@@ -58,3 +58,9 @@ class MatrixValidator:
     def validateMul(dim0, dim1):
         if (dim0[1] != dim1[0]):
             raise Exception("Invalid matrix dimensions")
+        
+    def validateExtendByColumnVector(dim0, dim1):
+        if (dim1[1] != 1):
+            raise Exception("Not a column vector")
+        if (dim1[0] != dim0[0]):
+            raise Exception("vector and matrix not in same vector space")
