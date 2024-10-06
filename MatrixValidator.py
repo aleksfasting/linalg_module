@@ -64,3 +64,9 @@ class MatrixValidator:
             raise Exception("Not a column vector")
         if (dim1[0] != dim0[0]):
             raise Exception("vector and matrix not in same vector space")
+        
+    def validateExtendByRowVector(dim0, dim1):
+        if (dim1[0] != 1):
+            raise Exception("Not a column vector")
+        if (dim1[1] != dim0[1]):
+            raise Exception("vector and matrix not in same vector space")

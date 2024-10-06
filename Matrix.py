@@ -133,10 +133,6 @@ class Matrix:
         return res
     
     def extendMatrixByRowVector(self: 'Matrix', vec: 'Matrix') -> 'Matrix':
-        if (vec.dim[0] != 1):
-            raise Exception("Not a column vector")
-        if (vec.dim[1] != self.dim[1]):
-            raise Exception("vector and matrix not in same vector space")
         res = Matrix((self.dim[0] + 1, self.dim[1]))
 
         res_array = self.array.copy()
