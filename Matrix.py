@@ -143,9 +143,7 @@ class Matrix:
         return res
 
     def extendMatrixRows(self: 'Matrix', extendBy: 'Matrix') -> 'Matrix':
-        if (extendBy.dim[0] != self.dim[0]):
-            raise Exception("matrices not in same vector space")
-        
+        MatrixValidator.validateExtendRows(self.dim, extendBy.dim)
         res = Matrix(self.dim, self.array.copy())
         for i in range(extendBy.dim[1]):
             res = res.extendMatrixByColumnVector(extendBy['i', i])
@@ -153,9 +151,7 @@ class Matrix:
         return res
 
     def extendMatrixCols(self: 'Matrix', extendBy: 'Matrix') -> 'Matrix':
-        if (extendBy.dim[1] != self.dim[1]):
-            raise Exception("matrices not in same vector space")
-        
+        MatrixValidator.validateExtendRows(self.dim, extendBy.dim)
         res = Matrix(self.dim, self.array.copy())
         for i in range(extendBy.dim[0]):
             res = res.extendMatrixByRowVector(extendBy[i, 'j'])
