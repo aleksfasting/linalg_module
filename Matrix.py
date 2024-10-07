@@ -1,19 +1,16 @@
+from MatrixValidator import MatrixValidator
+
 class Matrix:
     def __init__(self: 'Matrix', dim: tuple[int], vals: list[list[int]] = None) -> 'Matrix':
         self.dim = dim
+        MatrixValidator.validateConstructor(dim, vals)
         if (vals == None):
             self.array = [0 for i in range(dim[0] * dim[1])]
         elif (type(vals[0]) != int and type(vals[0]) != float):
-            if (len(vals) != dim[0]):
-                raise Exception("Invalid number of rows")
-            if (len(vals[0]) != dim[1]):
-                raise Exception("Invalid number of columns")
             self.array = []
             for i in range(dim[0]):
                 self.array += [vals[i][j] for j in range(dim[1])]
         else:
-            if (len(vals) != dim[0] * dim[1]):
-                raise Exception("Dimension not fitting to vals")
             self.array = vals
 
     def __getitem__(self, coord: tuple['int']) -> 'float':
@@ -22,8 +19,6 @@ class Matrix:
                 coord = (0, coord)
             elif (self.dim[1] == 1):
                 coord = (coord, 0)
-        elif (len(coord) != 2):
-            raise Exception("Invalid tuple")
         i = coord[0]
         j = coord[1]
         if (type(i) == str):
@@ -32,45 +27,27 @@ class Matrix:
             return Matrix((self.dim[0],1), self.array[j::self.dim[1]])
         if (type(j) == str):
             return Matrix((1, self.dim[1]), self.array[self.dim[0]*i:self.dim[0]*(i+1)])
-        if (i >= self.dim[0]):
-            raise Exception("Index i larger than dimension")
-        if (j >= self.dim[1]):
-            raise Exception("Index j larger than dimension")
         return self.array[i*self.dim[1] + j]
     
     def __setitem__(self, coord: tuple[int], a: 'Matrix') -> None:
-        if (len(coord) != 2):
-            raise Exception("Invalid tuple")
+        if (type(a) != Matrix):
+            raise Exception("Needs matrix input")
+        MatrixValidator.validateSetItem(self.dim, coord, a)
         i = coord[0]
         j = coord[1]
 
         if (type(i) == str):
-            if (type(a) != Matrix):
-                raise Exception("needs matrix input")
             if (a.dim == self.dim and type(j) == str):
                 self.array = a.array
-            if (type(j) == str):
-                raise Exception("Dimension of matrix is wrong")
-            if (a.dim != (self.dim[0], 1)):
-                raise Exception("Dimension of matrix is wrong")
             for k in range(self.dim[0]):
                 self.array[j + self.dim[1] * k] = a[k,0]
             return
         
         if (type(j) == str):
-            if (type(a) != Matrix):
-                raise Exception("Needs matrix input")
-            if (a.dim != (1, self.dim[1])):
-                raise Exception("Dimension of mtrix is wrong")
             for k in range(self.dim[0]):
                 self.array[i * self.dim[0] + k] = a[0,k]
             return
 
-
-        if (i >= self.dim[0]):
-            raise Exception("Index i larger than dimension")
-        if (j >= self.dim[1]):
-            raise Exception("Index j larger than dimension")
         self.array[i*self.dim[0] + j] = a
 
     def __str__(self: 'Matrix') -> str:
@@ -82,8 +59,7 @@ class Matrix:
         return s
     
     def __add__(self: 'Matrix', other: 'Matrix') -> 'Matrix':
-        if (self.dim != other.dim):
-            raise Exception("Matrices must have the same dimensions")
+        MatrixValidator.validateAdd(self.dim, other.dim)
         res = Matrix(self.dim)
         for i in range(self.dim[0]):
             for j in range(self.dim[1]):
@@ -91,8 +67,7 @@ class Matrix:
         return res
 
     def __sub__(self: 'Matrix', other: 'Matrix') -> 'Matrix':
-        if (self.dim != other.dim):
-            raise Exception("Matrices must have the same dimensions")
+        MatrixValidator.validateAdd(self.dim, other.dim)
         res = Matrix(self.dim)
         for i in range(self.dim[0]):
             for j in range(self.dim[1]):
@@ -107,8 +82,7 @@ class Matrix:
                     res[i,j] *= other
             return res
 
-        if (self.dim[1] != other.dim[0]):
-            raise Exception("Invalid matrix dimensions")
+        MatrixValidator.validateMul(self.dim, other.dim)
         res = Matrix((self.dim[0], other.dim[1]))
 
         for i in range(self.dim[0]):
@@ -148,10 +122,7 @@ class Matrix:
         return res
     
     def extendMatrixByColumnVector(self: 'Matrix', vec: 'Matrix') -> 'Matrix':
-        if (vec.dim[1] != 1):
-            raise Exception("Not a column vector")
-        if (vec.dim[0] != self.dim[0]):
-            raise Exception("vector and matrix not in same vector space")
+        MatrixValidator.validateExtendByColumnVector(self.dim, vec.dim)
         res = Matrix((self.dim[0], self.dim[1] + 1))
 
         res_array = self.array.copy()
@@ -162,10 +133,6 @@ class Matrix:
         return res
     
     def extendMatrixByRowVector(self: 'Matrix', vec: 'Matrix') -> 'Matrix':
-        if (vec.dim[0] != 1):
-            raise Exception("Not a column vector")
-        if (vec.dim[1] != self.dim[1]):
-            raise Exception("vector and matrix not in same vector space")
         res = Matrix((self.dim[0] + 1, self.dim[1]))
 
         res_array = self.array.copy()
@@ -176,9 +143,7 @@ class Matrix:
         return res
 
     def extendMatrixRows(self: 'Matrix', extendBy: 'Matrix') -> 'Matrix':
-        if (extendBy.dim[0] != self.dim[0]):
-            raise Exception("matrices not in same vector space")
-        
+        MatrixValidator.validateExtendRows(self.dim, extendBy.dim)
         res = Matrix(self.dim, self.array.copy())
         for i in range(extendBy.dim[1]):
             res = res.extendMatrixByColumnVector(extendBy['i', i])
@@ -186,9 +151,7 @@ class Matrix:
         return res
 
     def extendMatrixCols(self: 'Matrix', extendBy: 'Matrix') -> 'Matrix':
-        if (extendBy.dim[1] != self.dim[1]):
-            raise Exception("matrices not in same vector space")
-        
+        MatrixValidator.validateExtendRows(self.dim, extendBy.dim)
         res = Matrix(self.dim, self.array.copy())
         for i in range(extendBy.dim[0]):
             res = res.extendMatrixByRowVector(extendBy[i, 'j'])
