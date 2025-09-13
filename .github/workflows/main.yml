@@ -18,7 +18,18 @@ jobs:
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
             });
-            const approvals = reviews.filter(r => r.state === "APPROVED");
+            // Only count the latest review per user, and only if it's APPROVED
+            const latestReviews = {};
+            for (const review of reviews) {
+              const userId = review.user.id;
+              if (
+                !latestReviews[userId] ||
+                new Date(review.submitted_at) > new Date(latestReviews[userId].submitted_at)
+              ) {
+                latestReviews[userId] = review;
+              }
+            }
+            const approvals = Object.values(latestReviews).filter(r => r.state === "APPROVED");
             if (approvals.length < 1) {
               core.setFailed("[ERROR]: This PR needs at least 1 approval before merging.");
             } else {
